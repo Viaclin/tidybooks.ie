@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tidy Books</title>
+<meta name="description" content="Email us your receipts. Tidy Books keeps your books, files your VAT and runs your payroll for about half what most Irish bookkeepers charge.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F5257'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='%233FB97F' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/inter400.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/inter500.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/inter600.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/jakarta600.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/jakarta700.woff2") format("woff2"); }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/jakarta800.woff2") format("woff2"); }
+</style>
+<style>
+/* Layout: an inbox that tidies itself. Hero pairs a client's email with the tidy result; the rest is short, plain sections on a paper ground. */
+:root {
+  --paper: #F7F5F0;
+  --card: #FFFFFF;
+  --ink: #1E2A2F;
+  --muted: #55666B;
+  --line: #E2DED4;
+  --teal: #0F5257;
+  --teal-soft: #E3EFEF;
+  --green: #2E9E6A;
+  --green-soft: #E2F4EA;
+  --amber: #F2A541;
+  --amber-soft: #FDF0DC;
+  --on-teal: #FFFFFF;
+  --display: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, monospace;
+  --wrap: 1120px;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121A1C; --card: #1A2427; --ink: #E9EEEC; --muted: #A3B2B4; --line: #2A3639;
+    --teal: #5DB3B5; --teal-soft: #17302F; --green: #5CCB95; --green-soft: #173126;
+    --amber: #F2B465; --amber-soft: #33281A; --on-teal: #0B1416; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121A1C; --card: #1A2427; --ink: #E9EEEC; --muted: #A3B2B4; --line: #2A3639;
+  --teal: #5DB3B5; --teal-soft: #17302F; --green: #5CCB95; --green-soft: #173126;
+  --amber: #F2B465; --amber-soft: #33281A; --on-teal: #0B1416; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: var(--teal); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 600 13px/1 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); }
+section { padding-block: 72px; }
+.section-head { display: grid; gap: 12px; max-width: 640px; margin-bottom: 40px; }
+.section-head h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+.section-head p { color: var(--muted); font-size: 18px; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 16px/1 var(--body); padding: 15px 22px; border-radius: 999px; text-decoration: none; border: 2px solid var(--teal); transition: transform .15s ease, background .15s ease; }
+.btn-primary { background: var(--teal); color: var(--on-teal); }
+.btn-ghost { color: var(--teal); background: transparent; }
+.btn:hover { transform: translateY(-1px); }
+
+/* header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+header.site { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+header.site .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.logo { display: inline-flex; align-items: baseline; font: 800 25px/1 var(--display); color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+.logo .tick { display: inline-block; position: relative; }
+.logo .tick::after { content: ""; position: absolute; left: 50%; top: -3px; width: 10px; height: 6px; transform: translateX(-35%) rotate(-45deg); border-left: 3px solid var(--green); border-bottom: 3px solid var(--green); }
+.logo .dotless { font-family: var(--display); }
+nav.links { display: flex; align-items: center; gap: 26px; font-weight: 500; font-size: 15px; }
+nav.links a { color: var(--ink); text-decoration: none; }
+nav.links a:hover { color: var(--teal); }
+nav.links .btn { padding: 11px 18px; font-size: 15px; color: var(--on-teal); }
+@media (max-width: 760px) { nav.links a:not(.btn) { display: none; } }
+
+/* hero */
+.hero { padding-block: 64px 80px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+.hero h1 { font-size: clamp(44px, 7vw, 76px); font-weight: 800; letter-spacing: -0.03em; }
+.hero h1 em { font-style: normal; color: var(--teal); position: relative; white-space: nowrap; }
+.hero h1 em::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0.08em; height: 0.14em; background: var(--green); opacity: .35; border-radius: 4px; }
+.hero .lede { font-size: clamp(18px, 2vw, 21px); color: var(--muted); margin-top: 22px; max-width: 34em; }
+.hero .lede strong { color: var(--ink); font-weight: 600; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.ticks { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 28px 0 0; padding: 0; list-style: none; font-size: 15px; font-weight: 500; }
+.ticks li { display: inline-flex; align-items: center; gap: 8px; }
+.ticks li::before, .check::before { content: ""; width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--green-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.2l2.6 2.6L13 6.4' fill='none' stroke='%232E9E6A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat; }
+
+/* hero visual: email in, tidy books out */
+.flow { position: relative; display: grid; gap: 18px; }
+.example { justify-self: end; font: 600 11px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mail, .result { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 18px 40px -24px rgba(15, 82, 87, .35); }
+.mail { padding: 18px 20px; transform: rotate(-1.2deg); margin-right: 36px; }
+.mail-head { display: grid; gap: 4px; font-size: 13.5px; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.mail-head b { color: var(--ink); font-weight: 600; }
+.mail-body { padding-top: 12px; font-size: 15px; }
+.attach { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 12.5px/1 var(--body); padding: 7px 10px; border-radius: 8px; background: var(--amber-soft); color: var(--ink); border: 1px solid color-mix(in srgb, var(--amber) 45%, transparent); }
+.chip::before { content: ""; width: 10px; height: 12px; border-radius: 2px; background: var(--amber); }
+.arrow { justify-self: center; font: 600 13px/1 var(--body); color: var(--teal); display: flex; align-items: center; gap: 8px; }
+.arrow::before, .arrow::after { content: ""; width: 34px; height: 2px; background: var(--teal); opacity: .4; }
+.result { padding: 18px 20px; margin-left: 36px; transform: rotate(.8deg); }
+.result h3 { font-size: 15px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.badge { font: 600 11px/1 var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 6px 8px; border-radius: 999px; background: var(--green-soft); color: var(--green); white-space: nowrap; }
+.rows { margin-top: 12px; display: grid; gap: 0; font-size: 14px; }
+.rows div { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.rows div:last-child { border-bottom: 0; font-weight: 600; }
+.rows span:last-child { font-family: var(--mono); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) {
+  .result .rows div { animation: rowIn .5s ease both; }
+  .result .rows div:nth-child(2) { animation-delay: .15s; }
+  .result .rows div:nth-child(3) { animation-delay: .3s; }
+  .result .rows div:nth-child(4) { animation-delay: .45s; }
+  @keyframes rowIn { from { opacity: .2; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+}
+
+/* benefits */
+.benefits { background: var(--card); border-block: 1px solid var(--line); }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.benefit { display: grid; gap: 10px; align-content: start; }
+.benefit .big { font: 800 clamp(30px, 3.4vw, 40px)/1 var(--display); color: var(--teal); letter-spacing: -0.02em; }
+.benefit h3 { font-size: 21px; font-weight: 700; }
+.benefit p { color: var(--muted); }
+
+/* steps */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; counter-reset: step; }
+.step { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 24px 24px; display: grid; gap: 10px; align-content: start; }
+.step::before { counter-increment: step; content: counter(step); width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--teal); color: var(--on-teal); font: 800 18px/1 var(--display); }
+.step h3 { font-size: 20px; font-weight: 700; }
+.step p { color: var(--muted); font-size: 16px; }
+.step code { font-family: var(--mono); font-size: 14px; background: var(--teal-soft); color: var(--teal); padding: 2px 6px; border-radius: 6px; }
+
+/* services */
+.services { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.service { padding: 18px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); display: grid; gap: 6px; align-content: start; }
+.service b { font-family: var(--display); font-size: 17px; }
+.service span { color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+
+/* prices */
+.pricing { background: var(--teal-soft); }
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+.plan { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px 26px; display: grid; gap: 16px; grid-template-rows: auto auto auto 1fr auto; }
+.plan.popular { border: 2px solid var(--teal); position: relative; }
+.plan.popular .tag { position: absolute; top: -13px; left: 24px; background: var(--teal); color: var(--on-teal); font: 600 12px/1 var(--body); letter-spacing: .05em; text-transform: uppercase; padding: 7px 12px; border-radius: 999px; }
+.plan h3 { font-size: 22px; font-weight: 800; }
+.plan .who { color: var(--muted); font-size: 15px; min-height: 3em; }
+.price { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.price b { font: 800 46px/1 var(--display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.price span { color: var(--muted); font-size: 15px; }
+.typical { font-size: 13.5px; color: var(--muted); }
+.typical s { color: var(--muted); }
+.plan ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 15px; align-content: start; }
+.check { display: flex; gap: 10px; align-items: flex-start; }
+.check::before { margin-top: 3px; }
+.plan .btn { justify-content: center; }
+.extras { margin-top: 28px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.extra { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; font-size: 14.5px; }
+.extra b { font-family: var(--display); font-size: 18px; font-variant-numeric: tabular-nums; }
+.small { font-size: 14px; color: var(--muted); margin-top: 22px; max-width: 70ch; }
+
+/* trust */
+.trust .grid3 { gap: 24px; }
+.panel { border-radius: var(--radius); padding: 26px; background: var(--card); border: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+.panel h3 { font-size: 19px; font-weight: 700; }
+.panel p { color: var(--muted); font-size: 16px; }
+.who-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.who-tags span { padding: 9px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); font-weight: 500; font-size: 15px; }
+
+/* faq */
+.faq { display: grid; gap: 12px; max-width: 820px; }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px 20px; }
+summary { cursor: pointer; list-style: none; font: 700 17.5px/1.4 var(--display); padding: 16px 0; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 600 22px/1 var(--body); color: var(--teal); transition: transform .2s ease; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { color: var(--muted); padding-bottom: 18px; max-width: 65ch; }
+
+/* final call */
+.final { background: var(--teal); color: var(--on-teal); text-align: left; }
+.final .wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+.final h2 { font-size: clamp(32px, 4.5vw, 48px); font-weight: 800; }
+.final p { opacity: .9; font-size: 18px; margin-top: 12px; }
+.mailbox { background: color-mix(in srgb, var(--on-teal) 10%, transparent); border: 1px solid color-mix(in srgb, var(--on-teal) 30%, transparent); border-radius: 16px; padding: 22px; display: grid; gap: 14px; }
+.mailbox .addr { font: 700 clamp(20px, 2.6vw, 26px)/1.2 var(--display); word-break: break-all; }
+.mailbox .row { display: flex; flex-wrap: wrap; gap: 10px; }
+.final .btn-primary { background: var(--on-teal); color: var(--teal); border-color: var(--on-teal); }
+.final .btn-ghost { color: var(--on-teal); border-color: color-mix(in srgb, var(--on-teal) 60%, transparent); background: transparent; font-family: var(--body); cursor: pointer; }
+.copied { font-size: 14px; min-height: 1.2em; }
+
+footer { padding-block: 36px; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; }
+footer a { color: var(--muted); }
+.legal { flex-basis: 100%; font-size: 13px; }
+
+@media (max-width: 900px) {
+  .hero .wrap, .final .wrap { grid-template-columns: 1fr; }
+  .grid3, .steps, .plans { grid-template-columns: 1fr; }
+  .services, .extras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mail { margin-right: 12px; } .result { margin-left: 12px; }
+}
+@media (max-width: 480px) {
+  section { padding-block: 52px; }
+  .services, .extras { grid-template-columns: 1fr; }
+  .hero { padding-block: 40px 56px; }
+}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Tidy Books home">t<span class="tick">ı</span>dybooks</a>
+    <nav class="links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#prices">Prices</a>
+      <a href="#questions">Questions</a>
+      <a class="btn btn-primary" href="#start">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Your books, <em>tidied.</em></h1>
+        <p class="lede">Email us your receipts and invoices. We keep your books, file your VAT and run your payroll, <strong>for about half what most Irish bookkeepers charge.</strong></p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#start">Get started</a>
+          <a class="btn btn-ghost" href="#prices">See prices</a>
+        </div>
+        <ul class="ticks">
+          <li>No software to learn</li>
+          <li>Fixed monthly price</li>
+          <li>Checked by a qualified bookkeeper</li>
+        </ul>
+      </div>
+
+      <div class="flow" aria-label="Example: a client emails receipts and gets their VAT done">
+        <span class="example">Example</span>
+        <div class="mail">
+          <div class="mail-head">
+            <div>From: <b>Pat, Murphy Electrical</b></div>
+            <div>To: <b>accounts@tidybooks.ie</b></div>
+            <div>Subject: <b>October receipts</b></div>
+          </div>
+          <div class="mail-body">
+            Hi, here's October. Can you invoice the hotel for the rewiring too?
+            <div class="attach">
+              <span class="chip">IMG_2041.jpg</span>
+              <span class="chip">diesel.jpg</span>
+              <span class="chip">AIB October.csv</span>
+            </div>
+          </div>
+        </div>
+        <div class="arrow">Tidy Books</div>
+        <div class="result">
+          <h3>VAT3, Sep to Oct 2026 <span class="badge">Checked</span></h3>
+          <div class="rows">
+            <div><span>T1 VAT on sales</span><span>€202.50</span></div>
+            <div><span>T2 VAT on purchases</span><span>€136.23</span></div>
+            <div><span>Bank reconciled</span><span>to the cent</span></div>
+            <div><span>T3 to pay by 23 Nov</span><span>€66.27</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="benefits" aria-labelledby="why">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Why Tidy Books</span>
+        <h2 id="why">Less paperwork. Lower fees. No Revenue surprises.</h2>
+      </div>
+      <div class="grid3">
+        <div class="benefit">
+          <span class="big">1 email</span>
+          <h3>Get your evenings back</h3>
+          <p>No apps, no portals, no spreadsheets. Take a photo of a receipt and email it. We do the rest.</p>
+        </div>
+        <div class="benefit">
+          <span class="big">½ price</span>
+          <h3>Pay about half the usual fee</h3>
+          <p>Our own technology does the sorting and typing, so you pay for expert checking, not data entry. One fixed price each month.</p>
+        </div>
+        <div class="benefit">
+          <span class="big">On time</span>
+          <h3>Never miss a deadline</h3>
+          <p>We track every VAT, payroll and tax deadline for you, and remind you in good time if we need anything.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2 id="how-h">Three steps. You do the first. We do the rest.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3>Email us your paperwork</h3>
+          <p>Send receipts, invoices and your bank statement to <code>accounts@tidybooks.ie</code>. Photos, PDFs and forwarded emails all work.</p>
+        </div>
+        <div class="step">
+          <h3>We sort and record it</h3>
+          <p>Everything is read, recorded and matched to your bank. If something is missing or unclear, we ask you in one short email.</p>
+        </div>
+        <div class="step">
+          <h3>A bookkeeper checks and files</h3>
+          <p>A qualified bookkeeper checks every VAT return, payroll and set of accounts before it goes to Revenue. Each month you get a short summary, with ideas to cut your bills.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="what-h" style="padding-top: 0">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we do</span>
+        <h2 id="what-h">Everything a small business needs, in one place</h2>
+      </div>
+      <div class="services">
+        <div class="service"><b>Bookkeeping</b><span>Every receipt and invoice recorded and matched to your bank.</span></div>
+        <div class="service"><b>VAT returns</b><span>Your VAT3 prepared, checked and ready on time, every period.</span></div>
+        <div class="service"><b>Invoices for your customers</b><span>Tell us who to bill. We send the invoice and chase late payers.</span></div>
+        <div class="service"><b>Payroll</b><span>Payslips, PAYE, USC and PRSI, worked out every pay day.</span></div>
+        <div class="service"><b>RCT</b><span>For builders and trades paying or working as subcontractors.</span></div>
+        <div class="service"><b>Year-end accounts</b><span>Your profit and loss and balance sheet, ready for your accountant or the CRO.</span></div>
+        <div class="service"><b>Tax returns</b><span>Your Form 11 or your company's CT1, prepared from your books.</span></div>
+        <div class="service"><b>Ideas to cut your bills</b><span>A monthly summary of your figures, plus where you could save: rising bills, energy, phone and more.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="prices" aria-labelledby="prices-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Prices</span>
+        <h2 id="prices-h">One fixed price a month. No surprises.</h2>
+        <p>No set-up fee. No lock-in: leave any time with a month's notice.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Tidy Start</h3>
+          <p class="who">Sole traders not registered for VAT</p>
+          <div>
+            <div class="price"><b>€79</b><span>a month</span></div>
+            <p class="typical">Typical price in Ireland <s>€176</s>*</p>
+          </div>
+          <ul>
+            <li class="check">Bookkeeping, up to 30 transactions a month</li>
+            <li class="check">Invoices for your customers, with reminders</li>
+            <li class="check">Year-end accounts</li>
+            <li class="check">Your Form 11 tax return</li>
+          </ul>
+          <a class="btn btn-ghost" href="#start">Choose Tidy Start</a>
+        </div>
+        <div class="plan popular">
+          <span class="tag">Most popular</span>
+          <h3>Tidy VAT</h3>
+          <p class="who">Sole traders registered for VAT, such as trades, cafés and B&amp;Bs</p>
+          <div>
+            <div class="price"><b>€119</b><span>a month</span></div>
+            <p class="typical">Typical price in Ireland <s>€251</s>*</p>
+          </div>
+          <ul>
+            <li class="check">Everything in Tidy Start</li>
+            <li class="check">Up to 50 transactions a month</li>
+            <li class="check">Every VAT3 return and the annual RTD</li>
+            <li class="check">Monthly summary with ideas to cut your bills</li>
+          </ul>
+          <a class="btn btn-primary" href="#start">Choose Tidy VAT</a>
+        </div>
+        <div class="plan">
+          <h3>Tidy Company</h3>
+          <p class="who">Small limited companies</p>
+          <div>
+            <div class="price"><b>€169</b><span>a month</span></div>
+            <p class="typical">Typical price in Ireland <s>€433</s>*</p>
+          </div>
+          <ul>
+            <li class="check">Bookkeeping, up to 50 transactions a month</li>
+            <li class="check">VAT returns, plus a monthly summary with savings ideas</li>
+            <li class="check">Year-end accounts and your CT1</li>
+            <li class="check">CRO annual return (B1) prepared</li>
+          </ul>
+          <a class="btn btn-ghost" href="#start">Choose Tidy Company</a>
+        </div>
+      </div>
+      <div class="extras">
+        <div class="extra"><b>€15</b>per employee a month for payroll</div>
+        <div class="extra"><b>€25</b>a month for RCT</div>
+        <div class="extra"><b>€15</b>per extra 25 transactions</div>
+        <div class="extra"><b>€49</b>per month of catch-up if you're behind</div>
+      </div>
+      <p class="small">Prices exclude VAT at 23%. *Typical prices are the midpoint of published fees for the same work from Irish bookkeeping and accountancy firms, November 2026.</p>
+    </div>
+  </section>
+
+  <section class="trust" aria-labelledby="trust-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">You're in safe hands</span>
+        <h2 id="trust-h">Fast technology, careful people</h2>
+      </div>
+      <div class="grid3">
+        <div class="panel">
+          <h3>A person checks everything</h3>
+          <p>Nothing goes to Revenue until a qualified bookkeeper has checked it. Technology does the typing; people sign off.</p>
+        </div>
+        <div class="panel">
+          <h3>Your records stay private</h3>
+          <p>Your documents are read on our own computers in Kerry, not by outside AI services. We never sell or share your data.</p>
+        </div>
+        <div class="panel">
+          <h3>Irish, and local</h3>
+          <p>Based in Daingean Uí Chúis and working with businesses all over Ireland. We know Irish VAT, payroll and Revenue inside out.</p>
+        </div>
+      </div>
+      <div style="margin-top: 40px">
+        <p class="eyebrow" style="margin-bottom: 6px">Built for</p>
+        <div class="who-tags">
+          <span>Electricians and plumbers</span><span>Builders and trades</span><span>Cafés and restaurants</span>
+          <span>B&amp;Bs and guesthouses</span><span>Shops</span><span>Consultants</span><span>Small limited companies</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="questions" aria-labelledby="faq-h" style="padding-top: 0">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Questions</span>
+        <h2 id="faq-h">Good questions, short answers</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Do I need any software?</summary>
+          <p>No. If you can send an email, you can use Tidy Books. Forward invoices as they arrive, or send a batch of receipt photos once a week.</p>
+        </details>
+        <details>
+          <summary>What do I need to send you?</summary>
+          <p>Receipts and invoices for what you buy, copies of what you sell, and your bank statement each month. Most banks let you download it as a file in a few clicks, and we'll show you how.</p>
+        </details>
+        <details>
+          <summary>I'm behind on my books. Can you help?</summary>
+          <p>Yes. Send us what you have and we'll catch you up for €49 per month of records, then keep you up to date from there.</p>
+        </details>
+        <details>
+          <summary>Who files my returns with Revenue?</summary>
+          <p>We prepare every return and a qualified bookkeeper checks it. We'll agree with you at the start whether we file it on ROS for you or you file it yourself.</p>
+        </details>
+        <details>
+          <summary>Why do you need my ID?</summary>
+          <p>Irish anti-money laundering law requires bookkeepers to check the identity of every client. We'll ask for photo ID and proof of address when you join, and keep it secure.</p>
+        </details>
+        <details>
+          <summary>Can I leave?</summary>
+          <p>Any time, with a month's notice. There is no contract to sign up to, and we'll hand over your records in full.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="start" aria-labelledby="start-h">
+    <div class="wrap">
+      <div>
+        <h2 id="start-h">Ready for tidy books?</h2>
+        <p>Email us your name, your business and about how many receipts you have each month. We'll reply within one business day (Monday to Friday, except public holidays) with your price and how to get started.</p>
+      </div>
+      <div class="mailbox">
+        <span class="addr" id="addr">hello@tidybooks.ie</span>
+        <div class="row">
+          <a class="btn btn-primary" href="mailto:hello@tidybooks.ie?subject=Getting%20started%20with%20Tidy%20Books">Email us</a>
+          <button class="btn btn-ghost" id="copy" type="button">Copy address</button>
+        </div>
+        <span class="copied" id="copied" aria-live="polite"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Tidy Books · Daingean Uí Chúis, Co. Kerry · <a href="mailto:hello@tidybooks.ie">hello@tidybooks.ie</a></span>
+    <span><a href="privacy.html">Privacy notice</a></span>
+    <span class="legal">Tidy Books is a trading name of Viaclin Limited, registered in Ireland, company number 820040. Registered office: Fenero, Block D, Tyrrelstown Plaza, Dublin 15, D15 K4PY. VAT number IE4754731LH.</span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("copy").addEventListener("click", function () {
+    var out = document.getElementById("copied");
+    var text = document.getElementById("addr").textContent;
+    function selectIt() {
+      var r = document.createRange(); r.selectNodeContents(document.getElementById("addr"));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      out.textContent = "Address selected: press Ctrl+C to copy.";
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { out.textContent = "Copied."; }, selectIt);
+    } catch (e) { selectIt(); }
+  });
+</script>
+</body>
+</html>
